@@ -61,42 +61,44 @@ app.post('/register', (req, res) => {
 
     const {email, firstName, lastName} = req.body;
 
-
-    // database.users.push({
-    //     id: '12345',
-    //     name: name,
-    //     email: email,
-    //     entries: 0,
-    //     joined: new Date()
-    // })
-
     db('users')
     .insert({
         first_name: firstName,
         last_name: lastName,
-        email: email
+        email: email,
+        joined: new Date()
     }, ['*'])
-    .then(res => {
-        console.log(res);
+    .then(user => {
+        return res.json(user[0]);
       }
     )
-
-    res.json(database.users[database.users.length - 1]);
-
+    .catch(e => res.status(400).json('Error not able to register.'))
 })
 
-app.put('/entry', (req, res) => {
-    const {id} = req.body;
-    let found = false;
+app.post('/entry', (req, res) => {
+    const {id, entry} = req.body;
 
-    database.users.forEach(user => {
-        found = true;
-        user.entries++;
-        return res.json(user.entries);
+
+    db('entries')
+    .insert({
+        date_created: new Date(),
+        entry: entry,
+        userId: id
     })
-    if(!found){
-        res.status(400).json('not found');
-    }
+    .then(entries => {
+        res.json(entries[0].entries)
+    })
+    .catch(e => res.status(400).json(e))
+
+
+    // database.users.forEach(user => {
+    //     found = true;
+    //     user.entries++;
+    //     return res.json(user.entries);
+    // })
+    // if(!found){
+    //     res.status(400).json('not found');
+    // }
 })
 
 
