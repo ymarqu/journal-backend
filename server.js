@@ -51,7 +51,7 @@ app.post('/signin', (req,res) => {
 
     database.users.forEach(user  => {
         if(user.email === req.body.email && user.password === req.body.password){
-            res.json(user);
+            return res.json(user);
         }
     })
     res.status(400).json('access denied');
@@ -84,9 +84,9 @@ app.post('/entry', (req, res) => {
         date_created: new Date(),
         entry: entry,
         userId: id
-    })
+    }, ['*'])
     .then(entries => {
-        res.json(entries[0].entries)
+        return res.json(entries[0].entries)
     })
     .catch(e => res.status(400).json(e))
 
@@ -100,6 +100,8 @@ app.post('/entry', (req, res) => {
     //     res.status(400).json('not found');
     // }
 })
+
+
 
 
 app.get('/journal/:id', (req, res) => {
