@@ -39,7 +39,7 @@ let db = knex({
         }
 });
 
-console.log(db.select('*').from('users'));
+// console.log(db.select('*').from('users'));
 
 
 app.get('/', (req, res) => {
@@ -54,6 +54,7 @@ app.post('/signin', (req,res) => {
             return res.json(user);
         }
     })
+
     res.status(400).json('access denied');
 })
 
@@ -83,10 +84,10 @@ app.post('/entry', (req, res) => {
     .insert({
         date_created: new Date(),
         entry: entry,
-        userId: id
+        userid: id
     }, ['*'])
     .then(entries => {
-        return res.json(entries[0].entries)
+        return res.json(entries)
     })
     .catch(e => res.status(400).json(e))
 
